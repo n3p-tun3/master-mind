@@ -7,7 +7,7 @@
 	font-family: 'Space Mono', monospace;
 	font-weight: 400;
 	font-style: normal;
-	
+
 	/* Light mode colors - toned down for better readability */
 	--bg-primary: #f5f5f5;
 	--bg-secondary: #fafafa;
@@ -23,9 +23,18 @@
 	--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 	--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 	--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+	/* Status colors — text/bg pairs each measured at >= 4.5:1 against --bg-card,
+	   not derived from one hex at low alpha (that undershoots contrast). */
+	--color-success-bg: #dcfce7;
+	--color-success-text: #15803d;
+	--color-danger-bg: #fee2e2;
+	--color-danger-text: #b91c1c;
+	--color-info-bg: #dbeafe;
+	--color-info-text: #1d4ed8;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
 	/* Dark mode colors - much darker and more readable */
 	--bg-primary: #0a0a0a;
 	--bg-secondary: #111111;
@@ -41,10 +50,13 @@
 	--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
 	--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
 	--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
-}
 
-* {
-	transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+	--color-success-bg: #14532d;
+	--color-success-text: #4ade80;
+	--color-danger-bg: #450a0a;
+	--color-danger-text: #f87171;
+	--color-info-bg: #172554;
+	--color-info-text: #60a5fa;
 }
 
 body {
@@ -54,7 +66,7 @@ body {
 }
 
 /* Fix main background for dark mode */
-[data-theme="dark"] body {
+[data-theme='dark'] body {
 	background-color: var(--bg-primary);
 }
 
@@ -63,43 +75,8 @@ main {
 	background-color: var(--bg-primary);
 }
 
-[data-theme="dark"] main {
+[data-theme='dark'] main {
 	background-color: var(--bg-primary);
-}
-
-/* Enhanced OTP inputs with proper dark mode support */
-input {
-	width: 52px;
-	height: 52px;
-	text-align: center;
-	font-weight: 700;
-	font-size: 1.5rem;
-	margin-left: 0.25rem;
-	border-radius: 12px;
-	background-color: var(--bg-input);
-	border: 2px solid var(--border-primary);
-	color: var(--text-primary);
-	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-	box-shadow: var(--shadow-sm);
-}
-
-input:focus {
-	border-color: #3b82f6;
-	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15), var(--shadow-md);
-	outline: none;
-	transform: translateY(-1px);
-}
-
-input:disabled {
-	opacity: 0.6;
-	cursor: not-allowed;
-	transform: none;
-}
-
-input:hover:not(:disabled) {
-	border-color: var(--border-secondary);
-	box-shadow: var(--shadow-md);
-	transform: translateY(-1px);
 }
 
 /* Enhanced button styling */
@@ -130,18 +107,13 @@ input:hover:not(:disabled) {
 	box-shadow: none;
 }
 
-/* Card styling */
+/* Card styling — static content surface, not a clickable/navigable card, so it
+   doesn't lift on hover: that would fire on every mouse movement during play. */
 .card {
 	background-color: var(--bg-card);
 	border: 1px solid var(--border-primary);
 	border-radius: 16px;
 	box-shadow: var(--shadow-md);
-	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.card:hover {
-	box-shadow: var(--shadow-lg);
-	transform: translateY(-2px);
 }
 
 /* Typography improvements */
@@ -159,52 +131,54 @@ input:hover:not(:disabled) {
 }
 
 /* Dark mode specific overrides */
-[data-theme="dark"] .btn-primary {
-	background-color: #3b82f6;
+[data-theme='dark'] .btn-primary {
+	/* blue-700, not blue-500 — white text on the lighter blue measured 3.68:1,
+	   below the 4.5:1 floor for text; this pairing measures 6.70:1. */
+	background-color: #1d4ed8;
 	color: #ffffff;
 }
 
-[data-theme="dark"] .btn-primary:hover:not(:disabled) {
+[data-theme='dark'] .btn-primary:hover:not(:disabled) {
 	background-color: #2563eb;
 }
 
-[data-theme="dark"] .btn-primary:disabled {
+[data-theme='dark'] .btn-primary:disabled {
 	background-color: #374151;
 	color: #9ca3af;
 }
 
 /* Fix for attempt history in dark mode */
-[data-theme="dark"] .attempt-row:nth-child(even) {
+[data-theme='dark'] .attempt-row:nth-child(even) {
 	background-color: #2a2a2a;
 }
 
-[data-theme="dark"] .attempt-row:nth-child(odd) {
+[data-theme='dark'] .attempt-row:nth-child(odd) {
 	background-color: #1a1a1a;
 }
 
 /* Fix for rules page alternating backgrounds */
-[data-theme="dark"] .rules-item:nth-child(even) {
+[data-theme='dark'] .rules-item:nth-child(even) {
 	background-color: #2a2a2a;
 }
 
-[data-theme="dark"] .rules-item:nth-child(odd) {
+[data-theme='dark'] .rules-item:nth-child(odd) {
 	background-color: #1a1a1a;
 }
 
 /* Fix for explanation cards within rules */
-[data-theme="dark"] .explanation-card {
+[data-theme='dark'] .explanation-card {
 	background-color: #2a2a2a !important;
 	border-color: #404040 !important;
 }
 
 /* Fix for strategy tips section */
-[data-theme="dark"] .strategy-tips {
+[data-theme='dark'] .strategy-tips {
 	background-color: #1a1a1a !important;
 	border-color: #404040 !important;
 }
 
 /* Fix for example boxes within explanations */
-[data-theme="dark"] .example-box {
+[data-theme='dark'] .example-box {
 	background-color: #1a1a1a !important;
 }
 
@@ -235,7 +209,17 @@ input:hover:not(:disabled) {
 }
 
 /* Ensure all text elements use proper colors */
-p, span, div, h1, h2, h3, h4, h5, h6, label, li {
+p,
+span,
+div,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+li {
 	color: var(--text-primary);
 }
 
@@ -269,18 +253,18 @@ p, span, div, h1, h2, h3, h4, h5, h6, label, li {
 }
 
 /* Dark mode text color overrides */
-[data-theme="dark"] .text-gray-600 {
+[data-theme='dark'] .text-gray-600 {
 	color: var(--text-secondary) !important;
 }
 
-[data-theme="dark"] .text-gray-700 {
+[data-theme='dark'] .text-gray-700 {
 	color: var(--text-secondary) !important;
 }
 
-[data-theme="dark"] .text-gray-800 {
+[data-theme='dark'] .text-gray-800 {
 	color: var(--text-primary) !important;
 }
 
-[data-theme="dark"] .text-gray-900 {
+[data-theme='dark'] .text-gray-900 {
 	color: var(--text-primary) !important;
 }
