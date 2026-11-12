@@ -1,117 +1,34 @@
-# KrackTheKode 🎯
+# KrackTheKode
 
-A modern implementation of the classic Mastermind game built with SvelteKit. Players must guess a 4-digit secret code using strategic feedback about correct digits and their positions.
+A code-breaking game in the spirit of Mastermind. Guess a four-digit code in ten tries; after each guess you learn how many of your digits are in the code and how many are in the right place.
 
-## 🎮 How to Play
+Play it at [ktk.naolad.me](https://ktk.naolad.me).
 
-1. **Make a Guess**: Enter a 4-digit number with unique digits (no repeats)
-2. **Get Feedback**: Receive two pieces of information:
-   - **E (Exists)**: How many digits from your guess exist in the secret code
-   - **C (Correct Position)**: How many digits are in the correct position
-3. **Win**: Get C: 4 to win the game!
-4. **Game Over**: You have 10 attempts to crack the code
+## Modes
 
-## 🚀 Features
+- **Practice**: a new random code every game.
+- **Daily**: everyone gets the same code each day, one game per day, and you can share your result as a grid of scores that doesn't give the code away.
 
-- **Modern UI**: Clean, responsive design with Tailwind CSS
-- **Real-time Feedback**: Instant validation and helpful error messages
-- **Game State Management**: Track attempts, wins, and losses
-- **Accessibility**: Screen reader friendly with proper ARIA labels
-- **Analytics**: Built-in tracking with Matomo
-- **Confetti Celebration**: Visual celebration when you win!
+## How it's built
 
-## 🛠️ Tech Stack
+The game rules live in `src/lib/game/`, separate from the UI, so they can be tested directly:
 
-- **Frontend**: SvelteKit 2.0
-- **Styling**: Tailwind CSS
-- **Testing**: Playwright
-- **Analytics**: Matomo
-- **Icons**: Svelte Icons
-- **Notifications**: Svelte Toast
+- `rules.ts` validates codes and scores a guess. Codes use unique digits from 1 to 9, so "in the code" is just the overlap of the two digit sets, with no double counting.
+- `generateSecret.ts` picks a code from an injectable random source.
+- `dailyChallenge.ts` derives the day's code from the date with a seeded generator, reusing `generateSecret`, and remembers whether you've already played today.
+- `parseGuess.ts` turns typed input into a guess or a specific error message.
+- `shareResults.ts` builds the shareable result.
 
-## 📦 Installation
+Each module has a Vitest file next to it. This version is a rebuild of an earlier one whose scoring was quietly wrong; the tests are there so that can't happen again.
+
+Stack: SvelteKit, TypeScript, Tailwind CSS, Vitest, deployed on Vercel.
+
+## Run it
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd master-mind
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Open in browser
-npm run dev -- --open
+pnpm install
+pnpm dev
+pnpm test
 ```
 
-## 🧪 Testing
-
-```bash
-# Run tests
-npm run test
-
-# Install Playwright browsers (first time only)
-npx playwright install
-```
-
-## 🏗️ Building
-
-```bash
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-```
-
-## 📁 Project Structure
-
-```
-src/
-├── components/          # Reusable UI components
-│   └── Nav.svelte      # Navigation component
-├── lib/                # Utility libraries
-│   ├── confetti.min.js # Confetti animation
-│   └── index.js        # General utilities
-├── routes/             # SvelteKit routes
-│   ├── +layout.svelte  # Root layout
-│   ├── +page.svelte    # Main game page
-│   └── rules/          # Game rules page
-│       └── +page.svelte
-└── app.css             # Global styles
-```
-
-## 🎯 Game Logic
-
-The game generates a random 4-digit code using digits 1-9 (no zeros, no repeats). Players must guess this code using the feedback system:
-
-- **E (Exists)**: Count of digits that exist in the secret code
-- **C (Correct Position)**: Count of digits in the correct position
-
-Example:
-
-- Secret Code: 7249
-- Player Guess: 1234
-- Result: E: 2 (digits 2,4 exist), C: 1 (digit 2 is in correct position)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 👨‍💻 Developer
-
-Created by [PyrrhoOfElis](https://t.me/PyrrhoOfElis)
-
----
-
-**Happy Code Cracking!** 🔐✨
+On Node 25, run the tests with `NODE_OPTIONS=--no-experimental-webstorage pnpm test`, because Node's built-in `localStorage` otherwise hides the test environment's.
